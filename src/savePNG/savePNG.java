@@ -1,3 +1,4 @@
+package savePNG;
 import java.util.Random;
 //import java.awt.image.BufferedImage;
 import java.awt.image.*;
