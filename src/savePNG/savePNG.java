@@ -9,22 +9,22 @@ import java.io.*;
 
 public class savePNG {
     
-    public static void savePNG(int[][] buff, String path, String name) {
+    public static void savePNG(int[][] imageArray, String savePath, String imageFileName) {
         /* --- funtion to build and save a .png from an int array --- */
         
         
         // exception handling        
-        if (buff == null) {
+        if (imageArray == null) {
             throw new java.lang.NullPointerException("Array is null.");
         }
         
-        int height = buff.length;
+        int height = imageArray.length;
         
         if (height == 0) {
             throw new java.lang.IllegalArgumentException("Array is empty.");
         }
              
-        int width = buff[0].length;
+        int width = imageArray[0].length;
         
         if (width == 0) {
             throw new java.lang.IllegalArgumentException("first string of the input array is empty.");
@@ -42,18 +42,24 @@ public class savePNG {
         // fill it
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                data[i*width + j] = buff[i][j];
+                data[i*width + j] = imageArray[i][j];
             }
         }
         
         // creating a buffered image
-        BufferedImage im = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage im = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
         // putting the array into the buffered image
-        im.setRGB(0, 0, width, height, data, 0, width);
+        WritableRaster dataRaster = im.getRaster();
+        
+       
+        
+        dataRaster.setPixels(0, 0, width, height, data);
+        
+    //    im.setRGB(0, 0, width, height, data, 0, width);
 
         // creating the output file
         
-        File out = new File(path+name);
+        File out = new File(savePath+imageFileName);
         try {
             ImageIO.write(im, "png", out);
         } catch (IOException e) {
@@ -65,12 +71,7 @@ public class savePNG {
         System.out.println("This example will save a byte/int array as a .png image:");
         
         Random randGen = new Random();
-        //test randGen
-        for (int i = 0; i < 10; i++) {
-            int r = randGen.nextInt(100);
-            System.out.println("Generated: " + r);
-        }
-        
+       
         //generate a random array
         
         int width = 1280;
@@ -79,11 +80,11 @@ public class savePNG {
              
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                arr[i][j] = randGen.nextInt(100);
+                arr[i][j] = randGen.nextInt(256);
             }
         }
         
-        String stdPath = "/Users/Dibrov/Documents/images/";
+        String stdPath = "/Users/Dibrov/Documents/PhD/randomImages/";
         String stdName = "test.png";
         savePNG(arr, stdPath, stdName);
      
