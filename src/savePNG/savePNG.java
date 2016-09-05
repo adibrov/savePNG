@@ -9,7 +9,7 @@ import java.io.*;
 
 public class savePNG {
     
-    public static void savePNG(int[][] buff, String path, String name) {
+    public static void savePNG(long[][] buff, String path, String name) {
         /* --- funtion to build and save a .png from an int array --- */
         
         
@@ -33,23 +33,26 @@ public class savePNG {
         // check
         System.out.println("height is: " + height + " width is : " + width);
         
+        // creating a buffered image
+        BufferedImage im = new BufferedImage(width, height, BufferedImage.TYPE_USHORT_GRAY);
+        WritableRaster raster = im.getRaster();
+        
         
         //function per se
         
         // create a 1d array for flattened data
-        int[] data = new int[height*width];
+       // int[] data = new int[height*width];
         
         // fill it
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                data[i*width + j] = buff[i][j];
+                //data[i + j*height] = buff[i][j];
+            	raster.setSample(j, i, 0, buff[i][j]);
             }
         }
         
-        // creating a buffered image
-        BufferedImage im = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        // putting the array into the buffered image
-        im.setRGB(0, 0, width, height, data, 0, width);
+        
+       // im.setRGB(0, 0, width, height, data, 0, width);
 
         // creating the output file
         
@@ -74,16 +77,21 @@ public class savePNG {
         //generate a random array
         
         int width = 1280;
-        int height = 1024;
-        int[][] arr = new int[height][width];
+        int height = 500;
+        long[][] arr = new long[height][width];
              
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                arr[i][j] = randGen.nextInt(100);
+            	if (i > height/2) {
+            		arr[i][j] = 70000;
+            	}
+            	else {
+            		arr[i][j] = 0;
+            	}
             }
         }
         
-        String stdPath = "/Users/Dibrov/Documents/images/";
+        String stdPath = "C:\\Users\\myersadmin\\Documents\\images\\";
         String stdName = "test.png";
         savePNG(arr, stdPath, stdName);
      
